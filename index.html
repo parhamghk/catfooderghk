@@ -1,51 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Servo Control</title>
 
   <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #020617;
+      --panelBorder: #1f2937;
+      --status: #111827;
+      --green: #16a34a;
+      --text: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
+      padding: 14px;
     }
 
     .card {
-      background: #020617;
-      padding: 22px;
-      border-radius: 16px;
+      background: var(--panel);
+      padding: 22px 20px;
+      border-radius: 18px;
+      width: 100%;
+      max-width: 420px;
       box-shadow: 0 18px 32px rgba(0,0,0,.35);
       text-align: center;
-      width: 320px;
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.4rem;
     }
 
     button {
-      padding: 12px 18px;
-      border-radius: 10px;
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
       border: none;
-      background: #16a34a;
+      background: var(--green);
       color: white;
       font-weight: bold;
+      font-size: 1rem;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 6px;
+      transition: transform .1s, opacity .1s;
     }
 
-    button:hover { opacity: .9; }
+    button:active {
+      transform: scale(.97);
+    }
+
+    button:hover {
+      opacity: .9;
+    }
 
     .status {
       margin-top: 14px;
-      padding: 10px;
-      border-radius: 10px;
-      background: #111827;
-      border: 1px solid #1f2937;
-      font-size: 14px;
-      min-height: 32px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--status);
+      border: 1px solid var(--panelBorder);
+      font-size: .95rem;
+      min-height: 36px;
+      line-height: 1.35;
+    }
+
+    /* Extra tuning for very small screens */
+    @media (max-width: 380px) {
+      h2 { font-size: 1.2rem; }
+      button { font-size: .95rem; }
+      .card { padding: 18px 16px; }
     }
   </style>
 </head>
@@ -67,19 +105,19 @@ async function openServo() {
   box.textContent = "Sending command…";
 
   try {
-    // ➜ CHANGE THIS URL TO YOUR ESP32 ADDRESS
+    // 🔧 CHANGE TO YOUR ESP32 IP
     const res = await fetch("http://esp32.local/open");
 
-    if (!res.ok) throw new Error("Request failed");
+    if (!res.ok) throw new Error();
 
-    const text = await res.text();   // ESP32 can just return "OK"
+    const text = await res.text();
 
     if (text.trim().toUpperCase() === "OK") {
       box.textContent = "Status: OPENED";
     } else {
       box.textContent = "Status: NOT OPENED";
     }
-  } catch (e) {
+  } catch {
     box.textContent = "Status: ERROR (ESP32 not reachable)";
   }
 }
