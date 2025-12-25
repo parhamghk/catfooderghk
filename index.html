@@ -15,9 +15,7 @@
       --text: #fff;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: Arial, sans-serif;
@@ -41,10 +39,7 @@
       text-align: center;
     }
 
-    h2 {
-      margin: 0 0 12px 0;
-      font-size: 1.4rem;
-    }
+    h2 { margin: 0 0 12px 0; font-size: 1.4rem; }
 
     button {
       width: 100%;
@@ -60,13 +55,8 @@
       transition: transform .1s, opacity .1s;
     }
 
-    button:active {
-      transform: scale(.97);
-    }
-
-    button:hover {
-      opacity: .9;
-    }
+    button:active { transform: scale(.97); }
+    button:hover { opacity: .9; }
 
     .status {
       margin-top: 14px;
@@ -79,7 +69,6 @@
       line-height: 1.35;
     }
 
-    /* Extra tuning for very small screens */
     @media (max-width: 380px) {
       h2 { font-size: 1.2rem; }
       button { font-size: .95rem; }
@@ -105,20 +94,20 @@ async function openServo() {
   box.textContent = "Sending command…";
 
   try {
-    // 🔧 CHANGE TO YOUR ESP32 IP
-    const res = await fetch("http://esp32.local/open");
+    // ✅ Your ESP32 IP
+    const res = await fetch("http://192.168.1.107/open");
 
     if (!res.ok) throw new Error();
 
     const text = await res.text();
 
     if (text.trim().toUpperCase() === "OK") {
-      box.textContent = "Status: OPENED";
+      box.textContent = "Status: OPENED ✅";
     } else {
-      box.textContent = "Status: NOT OPENED";
+      box.textContent = "Status: NOT OPENED ❌";
     }
   } catch {
-    box.textContent = "Status: ERROR (ESP32 not reachable)";
+    box.textContent = "Status: ERROR (ESP32 not reachable) ⚠️";
   }
 }
 </script>
