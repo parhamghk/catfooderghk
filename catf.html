@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Servo Control</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background: #020617;
+      padding: 22px;
+      border-radius: 16px;
+      box-shadow: 0 18px 32px rgba(0,0,0,.35);
+      text-align: center;
+      width: 320px;
+    }
+
+    button {
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
+      background: #16a34a;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover { opacity: .9; }
+
+    .status {
+      margin-top: 14px;
+      padding: 10px;
+      border-radius: 10px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      font-size: 14px;
+      min-height: 32px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h2>Servo Controller</h2>
+
+    <button onclick="openServo()">OPEN</button>
+
+    <div class="status" id="statusBox">
+      Status: waiting…
+    </div>
+  </div>
+
+<script>
+async function openServo() {
+  const box = document.getElementById("statusBox");
+  box.textContent = "Sending command…";
+
+  try {
+    // ➜ CHANGE THIS URL TO YOUR ESP32 ADDRESS
+    const res = await fetch("http://esp32.local/open");
+
+    if (!res.ok) throw new Error("Request failed");
+
+    const text = await res.text();   // ESP32 can just return "OK"
+
+    if (text.trim().toUpperCase() === "OK") {
+      box.textContent = "Status: OPENED";
+    } else {
+      box.textContent = "Status: NOT OPENED";
+    }
+  } catch (e) {
+    box.textContent = "Status: ERROR (ESP32 not reachable)";
+  }
+}
+</script>
+</body>
+</html>
